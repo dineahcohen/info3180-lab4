@@ -47,6 +47,22 @@ def upload():
         return render_template('upload.html', form= form)
     return render_template('upload.html')
 
+def get_uploaded_images():
+    photo = []
+    valid_images = [".jpg",".png",".jpeg"]
+    for subdir, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
+        for file in files:
+            f = os.path.splitext(os.path.basename(subdir))
+            if f[1] in valid_images:
+                print(f)
+                photo.append(os.path.join(f, file))
+    return photo
+
+@app.route('/files')
+def files():
+    if not session.get('logged_in'):
+        abort(401) 
+    return render_template('files.html', files=get_uploaded_images())
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -61,6 +77,11 @@ def login():
             return redirect(url_for('upload'))
     return render_template('login.html', error=error)
 
+@app.route('/<file_name>.txt')
+def send_text_file(file_name):
+    """Send your static text file."""
+    file_dot_text = file_name + '.txt'
+    return app.send_static_file(file_dot_text)
 
 @app.route('/logout')
 def logout():
