@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <ul class="photos">
-    {% for file in files %}
-        <li class="photo-item">
-          <p class="name">{{ file }}</p>
-          <img class="photo" src="{{ url_for('static', filename='uploads/'+file) }}" alt="">
-        </li>
-    {% endfor %}
-  </ul>
+<h1 class="page-header">Uploads</h1>
+<div class="container">
+    <div class="row row-cols-3">
+        {% for lnk in imgs %}
+        <div class="col-4">
+            <img class="picture" src="{{ url_for('static', filename=lnk) }}">
+        </div>
+        {% endfor %}
+    </div>    
+</div>
 {% endblock %}
